@@ -1,33 +1,54 @@
 class ListaTarefas():
+
     def __init__(self):
         print("Lista de tarefas: ")
         self.tarefas = []
-        self.acoes = {}
-    def adicionar(self, *args):
+        self.acoes_feitas = []
+        self.acoes_desfeitas = []
+    def adicionar(self):
         tarefa = input("Digite uma nova tarefa: ")
+        self.acoes_feitas.append(('adicionar', tarefa))
         self.tarefas.append(tarefa)
-        self.acoes.clear()
-        self.acoes.update({'adicionar': tarefa})
         self.listar()
         return self.tarefas
-    def remover(self, *args):
+
+    def remover(self):
         tarefa = int(input("Digite o numero da tarefa que deseja remover :"))
-        self.tarefas[tarefa] = ''
-        self.acoes.clear()
-        self.acoes.update({'remover': self.tarefas[tarefa-1]})
+        self.acoes_feitas.append(('remover', self.tarefas[tarefa-1], tarefa-1))
+        self.tarefas.pop(tarefa - 1)
         self.listar()
         return self.tarefas
+
     def listar(self):
         for i, n in enumerate(self.tarefas):
             print(f"{i+1} - {n}")
+
     def voltar(self):
-        print(self.acoes)
-        if 'adicionar' in self.acoes:
+        if 'adicionar' in self.acoes_feitas[-1][0]:
+            self.tarefas.remove(self.acoes_feitas[-1][1])
             self.listar()
-            return self.tarefas.remove(self.acoes['adicionar'])
-        if 'remover' in self.acoes:
+            self.acoes_desfeitas.append(self.acoes_feitas[-1])
+            return self.acoes_feitas.pop(-1)
+        if 'remover' in self.acoes_feitas[-1][0]:
+            self.tarefas.insert(-1, self.acoes_feitas[-1][1])
             self.listar()
-            return self.tarefas.append(self.acoes['remover'])
+            self.acoes_desfeitas.append(self.acoes_feitas[-1])
+            return self.acoes_feitas.pop(-1)
+
+    def refazer(self):
+        print(self.acoes_desfeitas)
+        if 'remover' in self.acoes_desfeitas[-1][0]:
+            self.tarefas.remove(self.acoes_desfeitas[-1][1])
+            self.listar()
+            self.acoes_feitas.append(self.acoes_desfeitas[-1])
+            return self.acoes_desfeitas.pop(-1)
+        if 'adicionar' in self.acoes_desfeitas[-1][0]:
+            self.tarefas.insert(-1, self.acoes_desfeitas[-1][1])
+            self.listar()
+            self.acoes_feitas.append(self.acoes_desfeitas[-1])
+            return self.acoes_desfeitas.pop(-1)
+
+
 lista1 = ListaTarefas()
 
 while True:
