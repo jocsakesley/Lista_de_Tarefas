@@ -12,9 +12,9 @@ class ListaTarefas():
         return self.tarefas
     def remover(self, *args):
         tarefa = int(input("Digite o numero da tarefa que deseja remover :"))
-        self.tarefas.pop(tarefa)
+        self.tarefas[tarefa] = ''
         self.acoes.clear()
-        self.acoes.update({'remover': tarefa})
+        self.acoes.update({'remover': self.tarefas[tarefa-1]})
         self.listar()
         return self.tarefas
     def listar(self):
@@ -22,10 +22,10 @@ class ListaTarefas():
             print(f"{i+1} - {n}")
     def voltar(self):
         print(self.acoes)
-        if self.acoes['adicionar']:
+        if 'adicionar' in self.acoes:
             self.listar()
             return self.tarefas.remove(self.acoes['adicionar'])
-        if self.acoes['remover']:
+        if 'remover' in self.acoes:
             self.listar()
             return self.tarefas.append(self.acoes['remover'])
 lista1 = ListaTarefas()
